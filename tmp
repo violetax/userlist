@@ -1,0 +1,16 @@
+path
+
+babel
+webpack
+node-sass
+sass-loader
+react
+
+npm info "eslint-config-airbnb@15.0.1" peerDependencies
+npm add <outputabove>
+
+npm add react@16.1.1 react-dom@16.1.1 webpack@3.4.1 babel-loader@7.0.0 babel-core@6.24.1 babel-jest@20.0.3 babel-preset-react@6.24.1 sass-loader@6.0.6 node-sass@4.5.3
+
+npm add babel-preset-env@1.6.1
+
+
