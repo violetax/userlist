@@ -6,19 +6,16 @@ module.exports = {
   context: resolve(__dirname, 'src'),
   entry: [
     'react-hot-loader/patch',
-    'webpack-dev-server/client?http://127.0.0.1:9999',
-    'webpack/hot/only-dev-server',
+    'react-hot-loader/babel',
+    'webpack-hot-middleware/client',
     './index.jsx',
   ],
   output: {
     filename: 'build.js',
-    path: resolve(__dirname, 'public', 'javascripts'),
+    path: '/',
     publicPath: '/javascripts',
   },
   devServer: {
-    hot: true,
-    contentBase: resolve(__dirname, ''),
-    publicPath: '/javascripts',
      proxy: {
              '*': 'http://localhost:' + (process.env.PORT || 3000)
            },
@@ -39,6 +36,8 @@ module.exports = {
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NamedModulesPlugin(),
+      new webpack.NoEmitOnErrorsPlugin(),
+
         ],
 };
 
