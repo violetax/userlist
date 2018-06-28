@@ -1,0 +1,13 @@
+body {
+	font-family: serif;
+	font-style: oblique;
+	font-weight: bold;
+}	
+h1 {
+	margin-bottom: 1rem;
+	border-style: dotted;
+}
+.form-control::-webkit-input-placeholder { color: #EEE; }
+.form-control::-moz-placeholder { color: #EEE; }
+.form-control:-ms-input-placeholder { color: #EEE; }
+.form-control:-moz-placeholder { color: #EEE; }

@@ -1,7 +1,7 @@
 const { resolve } = require('path'); // eslint-disable-line no-unused-vars
 const webpack = require('webpack'); // eslint-disable-line
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-// build Webpack obj as input, do something, output
 module.exports = {
   context: resolve(__dirname, 'src'),
   entry: [
@@ -11,9 +11,9 @@ module.exports = {
     './index.jsx',
   ],
   output: {
-    filename: 'build.js',
+    filename: 'javascripts/build.js',
     path: '/',
-    publicPath: '/javascripts',
+    publicPath: '/',
   },
   devServer: {
      proxy: {
@@ -31,13 +31,27 @@ module.exports = {
         exclude: /(node_modules|bower_components|public\/)/,
         loader: 'babel-loader',
       },
+      {
+        test: /\.css$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: 'css-loader',
+        }),
+      },
+      {
+        test: /\.scss$/,
+        use: ExtractTextPlugin.extract({
+          use: [ 'css-loader', 'sass-loader' ],
+          fallback: 'style-loader',
+        }),
+      },
     ],
   },
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NamedModulesPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
-
+      new ExtractTextPlugin('stylesheets/style.css'),
         ],
 };
 
