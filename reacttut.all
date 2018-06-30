@@ -1970,8 +1970,7 @@ import HomePage from './home/HomePage';
 
 #Five Minute React 31 - React Routing
 
-.Let’s talk front-end routing! For starters, one question you might have is: “What is front-end routing?” This is a good question! Typically when you navigate from, say, localhost/page1 to localhost/page2, what happens is that the browser makes a request to the server, receives a response, and renders the new page
-.With client-side routing, the server’s never contacted
+.front-end routing: the server’s never contacted
 .Your browser request is intercepted by React (or another framework) and React renders a new set of components
 .This is all done without a page reload, which speeds things up, and in the case of React, it’s done without even completely rewriting the DOM, which speeds things up even more.
 
@@ -2147,10 +2146,6 @@ $ vim views/index.ejs
 $ rm public/javascripts/build.js
 .If you miss this step, your dev server will not work and you will keep getting the same error in your browser’s console no matter what other changes you make, which will drive you crazy for way longer than it should before you finally figure it out... NOT ME
 
-.OK, we should be good
-.Let’s test our site and make sure it works
-.We need to hard-refresh since we’ve changed a bunch of stuff
-.Now let’s test hot-reloading by adding some extra text to HomePage.jsx and then saving the file … awesome! It should be working.
 
 git add -A
 git commit -m "webpack and hot-reloading setup"
@@ -2158,10 +2153,10 @@ git push
 
 #Five Minute React 33 - DRYing Your Code
 
-.Anyway, our DRYing process is pretty fast and straightforward, at the moment
+.  “Don’t Repeat Yourself”
 .We’re going to create a Sidebar component, and then we’ll shift a little bit of code from our pages to our template.
 
-.Swing over to Sublime Text and, in /src/components/shared, create a file called Sidebar.jsx, and in it deposit the following code:
+$ vim src/components/shared/Sidebar.jsx
 
 import React from 'react';
 
@@ -2173,21 +2168,21 @@ export default function Sidebar() {
   );
 }
 
-.That’s a super-simple, pure-functional React component, right there
-.Obviously we’ll be doing more with it later, but it’s not later, it’s … it’s right now, so let’s move on
-.Open up /src/components/home/HomePage.jsx and let’s make some changes
+$ vim src/components/home/HomePage.jsx
 .First, add a line after line 1, and on line 3, add the following:
 
 import Sidebar from '../shared/Sidebar';
-
+.  Nuke these three lines:
         <aside className="col-sm-12 col-lg-4">
           This is the sidebar.
         </aside>
-
+. and replace them with this one:
         <Sidebar />
 
 .The next thing we want to do is remove some of the container HTML from this page
-.Cut the following two non-sequential lines out of HomePage.jsx and add them instead to /src/components/Template.jsx
+$ vim src/components/home/HomePage.jsx
+.Cut the following two non-sequential lines out of HomePage.jsx and add them instead to 
+$vim src/components/Template.jsx
 
     <section className="page-content">
     </section>
@@ -2204,49 +2199,43 @@ import Sidebar from '../shared/Sidebar';
       </div>
     </Router>
 
-.Good
-.Save that and return to HomePage.jsx real quick, where you’ll note that ESLint is complaining because the rest of our HTML is now tabbed in one level too deep
-.Fix that, and save this file as well.
-
-.Now open /src/components/account/ProfilePage.jsx and add the following to line 3, just like HomePage.jsx:
+$ vim src/components/account/ProfilePage.jsx 
+. and add the following to line 3, just like HomePage.jsx:
 
 import Sidebar from '../shared/Sidebar';
 
+. Then remove the opening and closing section tags entirely (again, you’ll need to remove an indent level from your code), and replace these lines:
       <aside className="col-sm-12 col-lg-4">
         This is the profile page sidebar
       </aside>
-
+. With this one:
       <Sidebar />
 
-.Save that file, and we’re good to go
-.If you had your Express server running this whole time, you’ll have seen it update a few times as you saved files
-.Hooray, hot-reloading
-.If not, you’ll need to fire it up and hard-refresh localhost:3000 to make sure you have the latest JS bundle
-.You should be able to navigate between the home page and the profile page by clicking on the links, just like before, and you’ll see that each is using the new Sidebar component.
 
 #Five Minute React 34 - Adding Bootstrap
 
-.We’re going to be ingesting bootstrap in a way that’s mildly weird
 .Instead of just calling the CSS via an HTML <style> tag, we’re going to import it into our JavaScript, then use a parsing plugin for Webpack that will pull out the CSS and serve it as a separate file
 .This way we’ll be able to make changes to the CSS, if we want, and have Webpack automatically compile them, rather than having to run a separate compiler like Gulp (or the Sass Ruby gem, which is not just a whole other tutorial, but an entirely different tutorial series and possibly website).
 
 $ npm add reactstrap@4.8.0 react-addons-transition-group@15.6.0 react-addons-css-transition-group@15.6.0 bootstrap@4.0.0-alpha.6 extract-text-webpack-plugin@2.1.2 css-loader@0.28.4 style-loader@0.18.2
+$ npm audit fix
 
 .This covers Reactstrap, some helper utilities for Bootstrap transitions, Bootstrap itself, and the plugins and loaders we’ll need to get Webpack to do what we want it to do
-.Once all that’s done installing, head for Sublime Text and let’s get this stuff running
-.Start by opening webpack.config.js … we don’t actually have to make too many changes here, but we need to address a few things
+$ vim webpack.config.js
 .First, below line 2, let’s add our extract text plugin, like this:
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+. line 14:
     filename: 'build.js',
-
+. line 16:
     publicPath: '/javascripts',
-
+. To be able to serve our CSS from wherever we want.
+. let’s change line 14 to this:
     filename: 'javascripts/build.js',
-
+. and line 16 to this:
     publicPath: '/',
-
+. one for handling .css files. Below line 27, add the following code:
       {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
@@ -2254,41 +2243,41 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
           use: 'css-loader',
         }),
       },
-
+. What we’re doing here is saying “when you encounter a CSS file, parse it with our extract text plugin, using css-loader to resolve all imports and URLs in the CSS, and then pipe that output to style-loader, which will actually write the generated CSS out.” 
+. add our text extraction plugin to Webpack’s list of plugins:
 new ExtractTextPlugin('stylesheets/style.css'),
 
 .This is telling our plugin where to serve the file, which, since in our output we just set our public path to /, means it’ll live at /stylesheets/style.css … which is where it belongs
-.Woo!
 
 .Speaking of which, we have an existing file of the same name in the actual, physical /public/stylesheets/ folder that can cause conflicts
 .It comes with Express and has about eight lines in it
-.Delete the file entirely, either via the command line or in Sublime Text.
+$ rm public/stylesheets/style.css
 
-.We’re done with Webpack config
-.Save that file
-.Now let’s make a few small tweaks to our components to use some Bootstrap stuff
-.First, open /src/index.jsx and add the following code under line 3:
+$ vim src/index.jsx
+.and add the following code under line 3:
 
 import 'bootstrap/dist/css/bootstrap.css';
 
-.This gives Webpack access to the Bootstrap css
-.Save the file
-.Next, open /src/components/Template.jsx and change line 13 to look like this:
+$ vim src/components/Template.jsx
+. and change line 13 to look like this:
 
         <section className="page-content container-fluid">
 
-.Save the file, and open up /src/components/home/HomePage.jsx and just below the first line, add the following:
+$ vim src/components/home/HomePage.jsx
+. and just below the first line, add the following:
 
 import { Button } from 'reactstrap';
 
+. add a helper function to this component. Below line 5, add this code:
 const showAlert = () => {
   alert('You clicked the button. Well done, Draco!');
 };
-
+. tweak to line 13, so that our columns will work on medium-sized screens:
       <div className="col-sm-12 col-md-8">
 
-.This is the home page.
-
+. Replace:
+This is the home page.
+. with:
         <p>
           This is the home page.
         </p>
@@ -2305,20 +2294,22 @@ const showAlert = () => {
 .If you were to check your Button element in the element inspector, you’d see that there’s no onClick generated on the finalized HTML output
 .So, take a breath, we’re all good!
 
-.Save that file, and let’s move on to /src/components/account/ProfilePage.jsx where we’re just, for now, going to make the same column tweak, so change “lg” to “md,” on line 9, like this:
+
+$ vim src/components/account/ProfilePage.jsx
+. change “lg” to “md,” on line 9, like this:
 
       <div className="col-sm-12 col-md-8">
 
-.Save the file, and move on to /src/components/shared/Sidebar.jsx
+$ vim src/components/shared/Sidebar.jsx
 .We’re going to make this a little prettier and add a Bootstrap card just for the heck of it
 .Just below line 1, add this code:
 
 import { Card, CardBlock, CardText } from 'reactstrap';
-
+. swap out the “lg” for an “md” on line 6 like this:
       <aside className="col-sm-12 col-md-4">
-
+.  swap out the following text on line 7:
       This is the new sidebar component.
-
+. with all of this:
       <Card>
         <CardBlock>
           <CardText>
@@ -2333,34 +2324,31 @@ import { Card, CardBlock, CardText } from 'reactstrap';
 
 #Five Minute React 35 - Classes and State
 
-.First thing we need to do is a little housekeeping
 .We’re duplicating a plugin right now in our babel config and our webpack config, and it can lead to some state issues, so open .babelrc and just delete this line entirely:
 
+$ vim .babelrc
 "plugins": ["react-hot-loader/babel"]
 
-.That’s it
-.Just save the file and we’re good
-.Now open /src/components/shared/Header.jsx and let’s make some changes
+$ vim src/components/shared/Header.jsx
 .Below line 2, add the following:
 
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
 
 .As you can see, we’re pulling in a whole bunch of stuff from Reactstrap that we’re going to use to assemble our Navbar
-.Now, here’s where things change significantly
 .In order to make toggling work, we need to use an existing method that’s only available to React classes, not pure functions like we have here, so it’s time to build our first one of those
 .Here’s what I recommend: you should add a few linebreaks above line 4, export default function Header(props) {, and then write out the entire new class above it
 .That way, you can compare the two and note differences between the function and the class.
 
 .We’re going to be using ES6 classes, here
-.They’re pretty straightforward, but we should talk about them a little bit
-.Classes are special objects that basically put a new layer over JavaScript’s existing prototype-based inheritance that makes things a little easier to work with
+.Classes are special objects that basically put a new layer over JavaScript’s existing prototype-based inheritance
 .They’re great for defining an object (in this case a React component) and making it clear how inheritance works
 .Classes can extend other classes, which means they get all of the parent class’s existing methods and other parameters, but can also add their own, which don’t get passed up to the parent
-.In this case, we’re extending React’s Component class, which means we get a bunch of handy methods like setState, which we’ll be using today, various lifecycle methods like componentWillMount that we’ll be covering in later tutorials, and more.
+
+.start by declaring our new class:
 
 export default class Header extends React.Component {
 }
-
+.  add some lines at the top of the class:
   constructor(props) {
     super(props);
 
@@ -2368,6 +2356,8 @@ export default class Header extends React.Component {
       isOpen: false,
     };
   }
+
+.A class constructor tells the class what arguments the class can take. It’s similar to defining function arguments like this:
 
 function(arg1, arg2) {
 }
@@ -2377,14 +2367,18 @@ function(arg1, arg2) {
 
 this.props = props;
 
-… but there’s not. That’s because the actual next line, super (props), is taking the assignments from the parent class (React.Component). In order to use “this” properly in a child class, you need to call super in the constructor. All of this is higher-level than we can really dive into in this tutorial, so if you want more information, I once again recommend Wes Bos’s ES6 For Everyone, which has an entire section on classes. It’s a great set of courses.
+. but there’s not. That’s because the actual next line, super (props), is taking the assignments from the parent class (React.Component). In order to use “this” properly in a child class, you need to call super in the constructor. 
+. I recommend Wes Bos’s ES6 For Everyone
 
 .Moving on, we see that we’re setting a state variable for our class
 .This is the only place you should ever manipulate this.state directly … in all other cases you’ll use a special setState() method, which we’ll get to
 .In our case, we’re just setting a variable called “isOpen” to false
 .This will control whether or not the navbar starts out expanded or collapsed on small screens (we want it to be collapsed)
 .Doing this in the constructor means that this.state and this.state.isOpen will be available anywhere else within the class that we want to use it.
+. App state is different from component state. The former contains data available application-wide. The latter controls the particular state of bits and pieces of a given component.
+. As a general rule of thumb, if it’s coming in from your database, it should be stored in app state
 
+. add this code to your class, we create a render method (which React will run automatically when it mounts the component) that returns a whole bunch of JSX, most of it comprised of the various components we imported from Reactstrap:
   render() {
     return (
       <header className="wrapper">
@@ -2407,13 +2401,14 @@ this.props = props;
 .Observant readers might note that we have not actually defined that method yet
 .We’ll fix that in a second
 .Also note that on line 20 we’re using this.state.isOpen which means that if we toggle that value in our state, the value will change in React, which will cause a redraw, changing the classes necessary to expand or collapse the menu
-.Cool!
 
+. let’s add our toggle method. Above the render block, but below the constructor, add the following code:
   toggleNavbar() {
     this.setState({
       isOpen: !this.state.isOpen,
     });
   }
+. As you can see from this and the render method, we don’t have to use the “function” declaration or anything in ES6 classes. It’s just the method name and some parens (which would contain arguments, if we needed them, but here we don’t).
 
 .So there’s how setState() works
 .You just pass it an object with any parts of the component state you want to manipulate, and it’ll do so
@@ -2427,6 +2422,10 @@ this.props = props;
 .It’s a little confusing, but the long and short of it is, we need this line up in our constructor, just above this.state:
 
 this.toggleNavbar = this.toggleNavbar.bind(this);
+
+. we need to delete the old Header function.
+
+. final file should look like this:
 
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -2467,15 +2466,16 @@ export default class Header extends React.Component {
   }
 }
 
-.Save this file and let’s head over to localhost:3000
 .You may need to hard-refresh, or even restart your server, because we made those changes to .babelrc
 .You should have a fully-working navbar, and you can resize your browser down to see the toggle functioning properly as well.
 
 #Five Minute React 36 - Building a Log In Page
 
+.We’re going to create a new page component, then use some Reactstrap to make it look pretty. We’re also going to add some custom Sass
+
 $ npm add sass-loader@6.0.6 node-sass@4.5.3
 
-.Let that do its thing, switch back to Sublime, and open webpack.config.js
+$ vim webpack.config.js
 .We’ll need to add a rule for Sass files, which use the .scss extension, just like we did for jsx and css files
 .It will go below the two other rules, and look like this:
 
@@ -2494,8 +2494,8 @@ $ npm add sass-loader@6.0.6 node-sass@4.5.3
         }),
       },
 
-.Save that file and you’re good to go
-.Now under /src, create a folder called css and in it, create a file called musiclist.scss
+$ mkdir src/css
+$ vim src/css/musiclist.scss
 .This will be where we put our own custom styles and overrides
 .For now, all we need is the following:
 
@@ -2504,22 +2504,23 @@ header {
 }
 
 .This will give a little padding between our header and our content, which is always nice
-.Of course, right now, nothing is telling Webpack where that scss file is, so open /src/index.jsx and just below line 4, where we’re importing Bootstrap’s css, let’s add the following:
+$ vim src/index.jsx
+. and just below line 4, where we’re importing Bootstrap’s css, let’s add the following:
 
 import './css/musiclist.scss';
 
-.Save this file
 .Now the style.css file that Webpack is serving from its dev server includes our custom styles
 .Unfortunately, thought, styles don’t reload, so you have to refresh to see visual changes
 .Do that, and your margin should show up
-.Great!
 
 .Let’s move on to the login page
-.Create a file in /src/components/account called LoginPage.jsx
+$ vim src/components/account/LoginPage.jsx
 .At the top of the file, we’ll need to import React and a few Reactstrap components, with these two lines:
 
 import React from 'react';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+
+. We’re going to create this component as an ES6 class, just like our Header, because we’re eventually going to need some state manipulation for form validation (among other things). So, here’s the code for that:
 
 export default class LoginPage extends React.Component {
   constructor(props) {
@@ -2533,13 +2534,14 @@ export default class LoginPage extends React.Component {
   }
 }
 
-.We need to add a route to our template, so open /src/components/Template.jsx and underneath line 5, add the following:
+.We need to add a route to our template
+$vim src/components/Template.jsx
+. and underneath line 5, add the following:
 
 import LoginPage from './account/LoginPage';
-
+. add a route under like 15, like this:
           <Route exact path="/account/login" component={LoginPage} />
 
-.Working? Cool
 .Let’s add a form to the Log In page
 .Replace <p>this is the log in page</p> with the following code:
 
@@ -2572,6 +2574,8 @@ import LoginPage from './account/LoginPage';
 .Save the file
 .Your hot-reloader should’ve hot-reloaded, and you should now be able to see our fancy new Log In page (note: log in page may be less fancy than advertised by the previous sentence)
 .I think Bootstrap’s default placeholder text is way too dark, and makes the forms look already filled in, so let’s quickly add the following to musiclist.scss:
+$ vim src/css/musiclist.scss 
+
 
 .form-control::-webkit-input-placeholder { color: #EEE; }
 .form-control::-moz-placeholder { color: #EEE; }
@@ -2585,28 +2589,34 @@ mongo
 use musiclist
 db.users.remove({})
 
-.OK, let’s write some API endpoints
-.Oh, and we need to make one quick change to our User model, too
-.When we created it, I totally blanked on including an email address, which is … kind of important! Let’s do that real quick
-.Open /models/user.js and, under line 10, add the following:
+. install https://www.getpostman.com/apps at /opt
 
+.OK, let’s write some API endpoints
+.Oh, and we need to make one quick change to our User model, too: including an email addres
+
+$ vim models/user.js
+.under line 10, add 
   email: String,
 
-.Under /routes/api, create a file called authentication.js
+.  remember that we previously added some Passport connectivity to this model, which is shortly going to allow us to use Passport’s register method
+
+$ vim routes/api/authentication.js
 .This is going to hold all of our auth-related endpoints, including registering, so let’s start with that, since right now we don’t have anyone in the database
 .Let’s start with these three lines:
 
 const express = require('express');
 const passport = require('passport');
 const User = require('../../models/user.js');
+. here we’re requiring Express, Passport, and our user model
 
+. Below line 3, add a blank line and then, on line 5, this code:
 const router = express.Router();
 
+. define our route on line 7, like this:
 // POST to /register
 router.post('/register', (req, res) => {
 });
 
-.Obviously that’s not doing much yet
 .It just tells our app to listen for a POST to /register (underneath the rest of our API URI, which we’ll define in a minute)
 .Now, let’s use the incoming JSON data and create a user object to save, via our User model (which we use to make sure that only the data we want in our database gets in there, in case the JSON being sent contains excess stuff)
 .Here’s the code for that:
@@ -2622,7 +2632,7 @@ router.post('/register', (req, res) => {
   });
 });
 
-req.body, by the way, will contain all of our incoming JSON data (or form data, if we were sending this via a normal web form, but we’ll be using Ajax to send it as JSON).
+. req.body, by the way, will contain all of our incoming JSON data (or form data, if we were sending this via a normal web form, but we’ll be using Ajax to send it as JSON).
 
 // POST to /register
 router.post('/register', (req, res) => {
@@ -2679,25 +2689,32 @@ router.post('/register', (req, res) => {
 
 module.exports = router;
 
-.All right, save this file and move on to app.js
-.We need two lines, here
-.First, underneath line 24, add the following:
+$ vim app.js
 
+. underneath line 24, add the following:
 const authentication = require('./routes/api/authentication');
-
+. underneath line 62, add this code:
 app.use('/api/authentication', authentication);
 
 .As you can see, the first line brings our authentication router into the app, and the second line says to direct any requests to /api/authentication to it
 .Thus, it will currently handle /api/authentication/register
 .Any other requests will currently redirect back to the top level of our server, initializing our react app (for example, if you tried localhost:3000/api/authentication/test you’d just end up seeing our Musiclist header with no page content)
-.That’s all for app.js
-.Save the file, and it’s time to create a user and then log him in.
 
-.Switch over to postman, and set the dropdown that currently says “GET” to “POST”
-.In the URI box directly to the right of that dropdown, type http://localhost:3000/api/authentication/register
-.Just under that box, click the word “body,” check the radio button for “raw,” and change the dropdown at the right end of the line to “JSON (application/json)” … phew
-.OK, we’re ready to POST, except we need to send some actual data! So, in the big text box, type this:
+. time to create a user and then log him in.
 
+.Switch over to postman:
+.1	Set the dropdown from GET to POST
+.2	For the URL, use:
+. TO REGISTER:
+http://localhost:3000/api/authentication/register
+. TO LOGIN:
+http://localhost:3000/api/authentication/login
+. TO LOGOUT:
+http://localhost:3000/api/authentication/logout 
+.3	Click “body” just below the URL
+.4	Click the “raw” radio button
+.5	Select “JSON (application/json)” from the dropdown 
+	
 {
   "username": "administrator",
   "password": "WHATEVERPASSWORDYOUWANT",
@@ -2705,21 +2722,19 @@ app.use('/api/authentication', authentication);
   "lastName": "YOURLASTNAME",
   "email": "YOURPREFERREDEMAIL"
 }
-
+. E.g. REGISTER:
 {
   "username": "administrator",
-  "password": "correcthorsebatterystaple",
-  "firstName": "Christopher",
-  "lastName": "Buecheler",
-  "email": "noreply@closebrace.com"
+  "password": "hostiaellibro",
+  "firstName": "Jane",
+  "lastName": "Fonda",
+  "email": "fondajane@hotmail.com"
 }
 
 #Five Minute React 38 - Log In and Log Out
 
-.Speaking of logging in, let’s write that endpoint
-.Open /routes/api/authentication.js and head down toward the bottom of the file
-.We’re going to add a new route underneath our /register route, which ends on line21
-.This one’s simple, so here’s all of the code at once:
+$ vim routes/api/authentication.js
+. add a new route underneath our /register route:
 
 // POST to /login
 router.post('/login', (req, res) => {
@@ -2733,13 +2748,13 @@ router.post('/login', (req, res) => {
     return res.send(JSON.stringify({ error: 'There was an error logging in' }));
   });
 });
+.  Do the login and then send back the logged in user’s info, or if that fails, send an error (error code’s unlikely to ever be called because a bad login, say a mistyped password or nonexistent user, will throw an HTTP 401 unauthorized error which ends the response: We’ll want to catch that  on the React side of things when we write our Ajax code
 
-{ "username": "administrator", "password": "correcthorsebatterystaple" }
+. make sure your Express server is running, and head over to Postman: use whatever the actual password was that you registered your user with (hostiaellibro)
 
-.OK, we can log a user in
-.Let’s log them out, too
-.This one’s even easier
-.Add it below your log in function in /routes/api/authentication.js:
+{ "username": "administrator", "password": "hostiaellibro" }
+
+$ vim routes/api/authentication.js:
 
 // GET to /logout
 router.get('/logout', (req, res) => {
@@ -2747,12 +2762,8 @@ router.get('/logout', (req, res) => {
   return res.send(JSON.stringify(req.user));
 });
 
-.Save that file and switch back to Postman
-.Keep your Log In tab for right now, and open a new tab
-.You don’t have to do anything with this one except fill in the URI: http://localhost:3000/api/authentication/logout
-.That’s it
-.Click the Send button, and you should see it return null.
-
+. Postman logout: and you should see it return null.
+. Change your code to look like this:
 router.get('/logout', (req, res) => {
   console.log(req.user);
   req.logout();
@@ -2760,17 +2771,49 @@ router.get('/logout', (req, res) => {
   return res.send(JSON.stringify(req.user));
 });
 
+. to logout: first creates a logged in user session, we just get null here … but we can go look in our node console, and see that it did indeed console log the user object first, and then console logged null after the log out was done
+
+. Remember to delete those two console.logs from your code and re-save the file!
+
 #Five Minute React 39 - A Basic Intro to Redux
+
+.  solution to handling state in React applications called Redux
 
 $ npm add redux@3.7.2 react-redux@5.0.5 redux-devtools@3.4.0
 
+. Redux is, well, Redux. React-Redux contains some bindings we’ll need to make things work. And we’re adding in some Redux-Devtools there because they’ll come in handy later, when we start to break things!
+
+. You start with your application. When an event happens, let’s say a click, your Action Handler for that event (which would be a function you write yourself and embed using an onClick in your JSX code) dispatches what Redux calls an “action” … the thing with actions is that they’re not functional. They are an object that contains information. Redux reads this information and, if your action matches its list of actions it’s watching for (more on this later), updates the Store accordingly. The Store is, as we’ve discussed, React’s name for the state of your application.
+
+. That’s all Redux does. Once it changes the Store, Redux is done and React takes over. React, which is tied into the Store, automatically re-renders parts of your app to account for the change in state.
+
+. We could get into “thunks” here and how a module called Redux-Thunk helps with asynchronous functions, but we don’t need it right now, and may not need it at all for an application with this level of complexity, so we’re going to skip it. You may also have heard of “Sagas” … they’re a pretty awesome solution to lining up and firing off whole bunches of Redux actions. We don’t need ‘em, and aren’t going to cover ‘em. Both are examples of ways to DRY large-scale React apps
+
+
 #Five Minute React 40 - Setting Up The Store
+
+.  wiring Redux into our React app. To start, we’re going to set up our Store
+
+. Redux calls your application’s state the Store, because it’s where your application’s active data is stored
+
+.(Flux, the general paradigm Facebook established for working with React using a one-way data flow, was originally designed to use multiple stores (one for each group of data you want to work with))
+
+. Redux simplifies things a bit. Your Store is one massive JavaScript object, and you use individual files called “reducers” to adjust it 	
+. These files take incoming actions:
+	. JavaScript objects with a description and any relevant data
+. and “reduce” them down into data for the Store
+.  what we want our app state to look like:  need to track: and, for that matter, have the API endpoints necessary to track,  also want to track whether an action is in progress, which doesn’t require an API endpoint
+
+. here’s what our Store’s going to look like at first:
 
 {
   progress: 0,
 }
 
-.First, create a file under /src/reducers called progress.js
+. first thing we’re going to do is just get our application talking to our Store with the simplest amount of state data possible:
+
+$ vim src/reducers/progress.js
+
 .We’re not using .jsx here because reducers are pure JavaScript
 .They never contain jsx code or have anything to do with the display layer of our application
 .They’re pure data handlers.
@@ -2787,14 +2830,13 @@ export default function reducer(state = initialState, action) {
   }
 }
 
-.Not much going on there right now, which is nice
-.Keeps things simple
 .We set an initialState variable to zero (I’ll explain why we’re using an integer here when we get to building actions), then ingest that variable into our reducer function using a nifty ES6 feature where a function argument can take either a value or, if that value is null, assign a default
 .We’re also bringing in an action argument, which right now is always going to be undefined, but that’s fine, since the only thing our switch statement is doing is going “no matter what, just return the existing state, which is zero, because that’s the default when we don’t pass anything to the state argument.”
 
-.Save that file and then create a folder under /src called store … this folder will contain one file
+$ mkdir src/store
+. this folder will contain one file
 .I realize that’s kind of stupid, but it helps keep your brain wrapped around what’s coming from where
-.The file you want to put in /src/store is simply called index.js
+$ vim src/store/index.js
 .This will simplify imports later on.
 
 import { combineReducers, createStore } from 'redux';
@@ -2814,12 +2856,11 @@ export default Store;
 .The combineReducers function is used to mash all of our individual reducers into a single big object
 .The createStore function turns that object into our Store, which helps wire up a lot of the React automagic.
 
-.Save this file
-.Now create a file in /src/components called TemplateContainer.jsx (capital at the start, as always with components)
+$ vim src/components/TemplateContainer.jsx
+. (capital at the start, as always with components)
 .Why are we creating a container for our template? Well, because we need to connect to part of our Store in order to pull data from it and then pass that data down as props
 .Whenever you want to connect a component, it’s best to create a container component
 .That way, all of your logic lives in the container, and the component itself remains a “dumb” component – all it does is display data passed down to it as props
-.It’s not strictly necessary, and I’ve worked on projects that don’t use containers, but I think they really help keep logic and display separate and clean.
 
 import React from 'react';
 import { connect } from 'react-redux';
@@ -2839,8 +2880,6 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps)(TemplateContainer);
 
-.All right, lots going on here
-.Let’s dig in
 .The top three lines import React, the connect functionality we’re going to need from Redux to connect to our Store, and our Template, which we’ll be calling like any ordinary React component
 .Then we have a pure function to render our TemplateContainer component, which takes a props argument
 .Then we pass the progress value derived from our props on to the template
@@ -2853,17 +2892,19 @@ export default connect(mapStateToProps)(TemplateContainer);
 .This is where the magic happens
 .It uses our MapStateToProps function to bind a piece of application state from the Store to our component’s props … without overwriting any other props we might’ve sent down from whatever higher-level component called this one! This is crazy useful not only because it lets us access app state easily, but because it will trigger a component re-render every time app state changes … this means if we increment or decrement our progress integer, the prop will change, the component will re-render, and we can do something with that new data.
 
-.And we’ll do that in the very next tutorial
-.For now, we’re going to wrap up the final bits we need here
-.Save this file, then open up /src/components/Template.jsx and make two small changes, one of them extremely temporary
+
+$ vim src/components/Template.jsx
+. and make two small changes, one of them extremely temporary
 .First, on line 9, add a props argument like this:
 
 export default function Template(props) {
-
+. just below the header on line 13, add this line:
         <p>{props.progress}</p>
 
 .This is going to display 0 on the page once we’re all set, proving that our app is now attached to our Store
-.Save this file, and open /src/index.jsx … it’s time to bring in our TemplateContainer component, instead of our Template component (which is now called by the container)
+
+$ vim src/index.jsx
+. it’s time to bring in our TemplateContainer component, instead of our Template component (which is now called by the container)
 .Adjust the top five lines to look like this:
 
 // Default export from a module
@@ -2886,17 +2927,17 @@ import Store from './store';
 .Now change line 16 from
 
 import Template from './components/Template';
-
+. to: 
 import TemplateContainer from './components/TemplateContainer';
-
+. Then wrap line 21 in Provider tags, and remove our test props:
       <Provider store={Store}>
         <Component />
       </Provider>
-
+. Change line 29 from:
 renderApp(Template)
-
+. to:
 renderApp(TemplateContainer)
-
+. final file should look like this:
 // Default export from a module
 import React from 'react';
 // Individual method exports from a module

@@ -1,0 +1,36 @@
+https://dzone.com/articles/top-10-most-common-commands-for-beginners
++ Login, Show All Databases, Select Database
+mongo -u <username>-p <password>--authenticationDatabase <dbname>
+show dbs
++ Authenticate and Log Out
+use databaseName
+db.auth("username", "password");
+db.logout()
++ List Down:
+show collections;
+db.getCollectionNames();
+show users;
+db.getUsers();
+show roles
++ Create a Collection, Insert, Update
+db.createCollection("collectionName");
+db.<collectionName>.insert({field1: "value", field2: "value"})
+db.<collectionName>.insert([{field1: "value1"}, {field1: "value2"}])
+db.<collectionName>.insertMany([{field1: "value1"}, {field1: "value2"}])
+db.<collectionName>.save({"_id": new ObjectId("jhgsdjhgdsf"), field1: "value", field2: "value"});
++ Display
+db.<collectionName>.find();
+db.<collectionName>.find().pretty();
+db.<collectionName>.find().limit(10);
+db.<collectionName>.find({"_id": ObjectId("someid")});
+. attribute names assigned to 1 or 0 based on whether that attribute value needs to be included in the output or not, respectively.
+db.<collectionName>.find({"_id": ObjectId("someid")}, {field1: 1, field2: 1});
+db.<collectionName>.find({"_id": ObjectId("someid")}, {field1: 0}); .// Exclude field1
+db.<collectionName>.count();
++ Administrative Commands
+db.<collectionName>.stats()
+db.printCollectionStats()
+db.<collectionName>.dataSize() // Size of the collection
+db.<collectionName>.storageSize() // Total size of document stored in the collection
+db.<collectionName>.totalSize() // Total size in bytes for both collection data and indexes
+db.<collectionName>.totalIndexSize() // Total size of all indexes in the collection

@@ -21,6 +21,7 @@ const api = require('./routes/api/index');
 const users = require('./routes/api/users');
 
 const app = express();
+const authentication = require('./routes/api/authentication');
 
 // Connect Mongoose
 mongoose.connect('mongodb://localhost/userlist');
@@ -55,12 +56,11 @@ app.use(webpackHotMiddleware(webpackCompiler, {
   log: console.log,
 }));
 
-
-
 // routes
 app.use('/api', api);
 app.use('/api/users', users);
 app.use('/*', indexRouter);
+app.use('/api/authentication', authentication);
 
 // more passport
 passport.use(new LocalStrategy(User.authenticate()));
