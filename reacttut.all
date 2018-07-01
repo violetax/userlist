@@ -2974,8 +2974,11 @@ if (module && module.hot) {
 
 #Five Minute React 41 - Redux Actions
 
-.Create a file in /src/actions called progress.js … once again, no JSX extension here because this file will be pure JavaScript with no rendering.
+. create some actions that we can use to change the data we’re storing
 
+$ vim src/actions/progress.js
+
+. A reminder that actions themselves are just pure JavaScript objects. They always look like this:
 {
   type: 'A_UNIQUE_NAME_ALWAYS_IN_CAPS_WITH_UNDERSCORES',
   data: 'some data' // can be a string, array, object, boolean, integer, etc.
@@ -2997,24 +3000,24 @@ export const incrementProgress = () => {
 .Nuke that code and replace it with this code, which does exactly the same thing:
 
 export const incrementProgress = () => ({ type: 'INCREMENT_PROGRESS' });
+. and the decrement func:
+export const decrementProgress = () => ({ type: 'DECREMENT_PROGRESS' });
 
+. Note: you have to wrap the object in parens, otherwise JavaScript thinks you’re opening the function, not setting a return value
+
+. Here are a few other examples of ES6 implicit returns:
 const returnTrue = () => true;
 const sayHi = (firstName, lastName) => `Hi, ${firstName} ${lastName}!`;
 const showLength = myArray => myArray.length;
 
 .You only need to wrap function arguments in parens if there’s more than one of them, which is why myArray has no parens in the last example
-.All right, so we’ve got our increment action creator
-.Pretty simple, huh? You can probably figure out how to do the decrement function without me providing the code
-.In fact, let’s make that a little test
-.Try to write it yourself and if you aren’t sure, highlight the following block to see the answer:
 
-export const decrementProgress = () => ({ type: 'DECREMENT_PROGRESS' });
 
-.Save the file and that’s it … our action creators are finished
 .Now we need to do two things
 .The first is, tell our progress reducer to listen for our actions
 .The second is wire our buttons up to fire those creators when we click them
-.Open /src/reducers/progress.js and just below the switch statement on line 4, add the following code:
+$ vim src/reducers/progress.js
+. and just below the switch statement on line 4, add the following code:
 
     case 'INCREMENT_PROGRESS': {
       return state + 1;
@@ -3024,14 +3027,15 @@ export const decrementProgress = () => ({ type: 'DECREMENT_PROGRESS' });
       return Math.max(state - 1, 0);
     }
 
-.Save the file
-.See what we’re doing here? We’re watching the type value of our action for certain strings, and then acting upon them
+. We’re watching the type value of our action for certain strings, and then acting upon them
 .This is how Redux works
 .Every time an action of any sort is passed, it runs through all available reducers to see if the type is matched by any, and if so, it acts upon the state.
 
 .Now we have a choice to make
 .We could connect our HomePage component using Redux, which will allow us to access our action creators and trigger them with button clicks, but as we pointed out in our last video, it’s good practice to instead create a container element and then pass the functionality down as props, so let’s do that
-.In /src/components/home create a file called HomePageContainer.jsx and add the following code:
+
+$ vim src/components/home/HomePageContainer.jsx
+. and add the following code:
 
 import React from 'react';
 
@@ -3048,7 +3052,7 @@ export function HomePageContainer(props) {
     />
   );
 }
-
+! HASTA AQU'I
 .Notice that we’re importing our action creators from our action file
 .We can’t just plug these in to the incrementFunction and decrementFunction props we’re passing to our HomePage component, though, because they won’t have Redux’s dispatcher attached to them, which is the functionality that actually sends the actions to the reducer
 .So we need to use Redux to bind those action creators to functions we can send as props, which we do by creating another function below our first function, like this:
