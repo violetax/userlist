@@ -131,6 +131,7 @@ $ npm init
 }
 
 $ npm add map-reverse
+$ npm audit fix
 
 subl index.js
 
@@ -875,6 +876,7 @@ git push
 }
 
 $ npm add mongoose@5.0.4
+$ npm audit fix
 
 .Whew
 .That was a tough one, but we got through it, somehow, together, and now we’ve got mongoose installed (and Yarn automatically added it to our package.json)
@@ -1000,9 +1002,11 @@ module.exports = mongoose.model('User', User);
 
 #Five Minute React 18 - Setting Up Testing
 
-$ npm add jest@19.0.2 --dev
+$ npm add jest@19.0.2 --only=dev
+$ npm audit fix
 
-$ npm add supertest@3.0.0 --dev
+$ npm add supertest@3.0.0 --only=dev
+$ npm audit fix
 
 mongo
 
@@ -1221,7 +1225,8 @@ $ npm info "eslint-config-airbnb@15.0.1" peerDependencies
   'eslint-plugin-import': '^2.2.0',
   'eslint-plugin-react': '^7.0.1' }
 
-$ npm add --dev eslint-config-airbnb@15.0.1 eslint@^3.19.0 eslint-plugin-jsx-a11y@^5.0.1 eslint-plugin-import@^2.2.0 eslint-plugin-react@^7.0.1
+$ npm add --only=dev eslint-config-airbnb@15.0.1 eslint@^3.19.0 eslint-plugin-jsx-a11y@^5.0.1 eslint-plugin-import@^2.2.0 eslint-plugin-react@^7.0.1
+$ npm audit fix
 
 .Note that if the version numbers you’re getting are different, you should use those ones, and not the ones listed here
 .Once you hit enter, this will take a bit
@@ -1261,7 +1266,8 @@ app.use((err, req, res, next) => { // eslint-disable-line
 
 $ npm -g add eslint-config-airbnb@15.0.1 eslint@^3.19.0 eslint-plugin-jsx-a11y@^5.0.1 eslint-plugin-import@^2.2.0 eslint-plugin-react@^7.0.1
 
-$ npm add --dev eslint-plugin-jest@20.0.3
+$ npm add --only=dev eslint-plugin-jest@20.0.3
+$ npm audit fix
 
 $ npm -g add eslint-plugin-jest@20.0.3
 
@@ -1413,10 +1419,12 @@ var myFunc  = function(myParam) {
 };
 
 $ npm add react@16.1.1 react-dom@16.1.1 webpack@3.4.1 babel-loader@7.0.0 babel-core@6.24.1 babel-jest@20.0.3 babel-preset-react@6.24.1 sass-loader@6.0.6 node-sass@4.5.3
+$ npm audit fix
 
 #Five Minute React 24 - Setting Up Webpack
 
 $ npm add babel-preset-env@1.6.1
+$ npm audit fix
 
 git branch
 
@@ -1669,7 +1677,8 @@ $ npm run build-dev
 
 #Five Minute React 27 - Webpack Hot-Reloading Part 1
 
-$ npm add --dev webpack-dev-server@2.4.5 react-hot-loader@3.0.0
+$ npm add --only=dev webpack-dev-server@2.4.5 react-hot-loader@3.0.0
+$ npm audit fix
 
 .AirBnB’s ESLint rules don’t like us using dev dependencies in our code, but we’re going to have to do so here in one instance, so let’s keep them from complaining
 .Open up .eslintrc, add a comma to the end of line 11, and just below it add the following:
@@ -1976,6 +1985,7 @@ import HomePage from './home/HomePage';
 
 $ npm add react-router-dom@4.1.1
 $ npm audit fix
+$ npm audit fix
 
 .We’re going to need to wrap our components in our router, but that’s relatively straightforward, at least at the start
 $ vim src/components/Template.jsx
@@ -2075,6 +2085,7 @@ app.use('/*', index);
 .This means no more conflicts, and it also means we don’t have to run a separate terminal window containing our Webpack server, since it will fire up when we launch Express with nodemon npm start.
 
 $ npm add webpack-dev-middleware@1.11.0 webpack-hot-middleware@2.18.0
+$ npm audit fix
 $ npm audit fix
 
 $ vim webpack.config.js
@@ -2218,6 +2229,7 @@ import Sidebar from '../shared/Sidebar';
 .This way we’ll be able to make changes to the CSS, if we want, and have Webpack automatically compile them, rather than having to run a separate compiler like Gulp (or the Sass Ruby gem, which is not just a whole other tutorial, but an entirely different tutorial series and possibly website).
 
 $ npm add reactstrap@4.8.0 react-addons-transition-group@15.6.0 react-addons-css-transition-group@15.6.0 bootstrap@4.0.0-alpha.6 extract-text-webpack-plugin@2.1.2 css-loader@0.28.4 style-loader@0.18.2
+$ npm audit fix
 $ npm audit fix
 
 .This covers Reactstrap, some helper utilities for Bootstrap transitions, Bootstrap itself, and the plugins and loaders we’ll need to get Webpack to do what we want it to do
@@ -2474,6 +2486,7 @@ export default class Header extends React.Component {
 .We’re going to create a new page component, then use some Reactstrap to make it look pretty. We’re also going to add some custom Sass
 
 $ npm add sass-loader@6.0.6 node-sass@4.5.3
+$ npm audit fix
 
 $ vim webpack.config.js
 .We’ll need to add a rule for Sass files, which use the .scss extension, just like we did for jsx and css files
@@ -2780,6 +2793,7 @@ router.get('/logout', (req, res) => {
 .  solution to handling state in React applications called Redux
 
 $ npm add redux@3.7.2 react-redux@5.0.5 redux-devtools@3.4.0
+$ npm audit fix
 
 . Redux is, well, Redux. React-Redux contains some bindings we’ll need to make things work. And we’re adding in some Redux-Devtools there because they’ll come in handy later, when we start to break things!
 
@@ -3123,13 +3137,16 @@ import HomePage from './home/HomePageContainer';
 
 #Five Minute React 42 - Redux Tools
 
-$ npm add --dev redux-logger@3.0.6 redux-devtools-log-monitor@1.3.0 redux-devtools-dock-monitor@1.1.2
+$ npm add --only=dev redux-logger@3.0.6 redux-devtools-log-monitor@1.3.0 redux-devtools-dock-monitor@1.1.2
+$ npm audit fix
 
-.Let that run, and then switch over to Sublime Text
+.(ya tengo todas pero un punto de vers m'as alto)
+
 .First, we’re going to create a DevTools component
 .This will be a handy overlay (which can be easily hidden) that will show us step by step what’s happening to our app state, and allow us to do things like step back through the state, or even cancel a single state change in the middle of things
 .It’s really useful for seeing exactly how your data’s being mutated
-.In /src/components/shared, create a file called DevTools.jsx and add the following code:
+$ vim src/components/shared/DevTools.jsx
+. and add the following code:
 
 import React from 'react';
 import LogMonitor from 'redux-devtools-log-monitor';
@@ -3150,17 +3167,15 @@ export default DevTools;
 
 .We’re using two pre-made components here
 .LogMonitor contains the state monitoring functionality, and DockMonitor gives us a handy place to display data, allowing us to move it around our window, hide it, and so forth
-.Save this file, and we’re ready to move on.
 
-.Open /src/store/index.js
+$ vim src/store/index.js
 .We’re going to make a bunch of changes, here, including laying the groundwork for hot-reloading when we make changes to our reducers (sweet!)
 .There will be more work in a future tutorial to get that going, but we might as well make the change to this particular file while we’re editing it.
 
-.We have quite a few changes to make here, but don’t worry, they’re not complicated
 .First, change line 1 by adding applyMiddleware and compose to the list of imports, like this:
 
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
-
+. Below that, add a new line, which will pull in our logger – a handy utility that logs every action to the console, and also shows app state before and after the action is applied
 import { logger } from 'redux-logger';
 
 .After that, we need to tie our DevTools component in with our Store, so we need to import it
@@ -3170,16 +3185,21 @@ import DevTools from '../components/shared/DevTools';
 
 .Our combineReducers block stays the same, because we aren’t adding any new reducers right now
 .It’s still just the progress reducer
-.Soon we’re going to have more of these, but that’ll be another tutorial.
 
+. Below that block, on line 11:
 const enhancer = compose(
   applyMiddleware(logger),
   DevTools.instrument(),
 );
 
-const Store = createStore(combinedReducers);
+. The compose function allows us to chain any middleware we want to use before running our output through the DevTools component.
 
+.  delete the other two lines in the file, these ones:
+
+const Store = createStore(combinedReducers);
 export default Store;
+
+.  replace those with a function, which we’ll export and call elsewhere:
 
 export default function configureStore(initialState) {
   const store = createStore(combinedReducers, initialState, enhancer);
@@ -3193,6 +3213,8 @@ export default function configureStore(initialState) {
 
   return store;
 }
+
+. this code will cause Redux to throw an error in your console the first time your hot-reloader fires. You can ignore this for now. We’re exporting a function that creates our Store, now, instead of our Store object itself. So we’re going to need to call that function somewhere.
 
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import { logger } from 'redux-logger';
@@ -3222,21 +3244,23 @@ export default function configureStore(initialState) {
   return store;
 }
 
-.Save that file, then open up /src/index.jsx and let’s make some changes
+$ vim src/index.jsx
+. and let’s make some changes
+
 .Find this line:
-
 import Store from './store';
-
+.change it to the following: 
 import configureStore from './store';
-
+. just above that line, add the following:
 import DevTools from './components/shared/DevTools';
 
 .In between your import templateContainer and const renderApp lines, add this one:
 
 const Store = configureStore();
 
+.Right under this line:
         <Component />
-
+.Add the following:
         <DevTools />
 
 .Ah, but wait … Provider expects only a single child element
@@ -3250,7 +3274,9 @@ const Store = configureStore();
 
 .There we go
 .Were all set here
-.This is what your whole index.jsx file should look like at this point (I added a bit more spacing up at the top for clarity):
+
+$ vim src/index.jsx
+. how the file should look like at this point:
 
 // Default export from a module
 import React from 'react';
@@ -3601,6 +3627,7 @@ $ npm run start-prod
 #Five Minute React 45 - Wiring Up Log-In Part 1
 
 $ npm add whatwg-fetch@2.0.3
+$ npm audit fix
 
 nodemon npm start
 
@@ -4776,6 +4803,7 @@ add a this to renderGreeting, like this:
 }
 
 $ npm add redux-thunk@2.2.0
+$ npm audit fix
 
 and hitting enter. Once that’s installed, restart your server with nodemon npm start. You should be all set! No longer will the entire express server reset every time you save an action, reducer, etc.
 
@@ -5893,6 +5921,7 @@ import ErrorBox from './shared/ErrorBoxContainer';
 .It’s called Availity reactstrap Validation and we install it by heading for a terminal window or command prompt, switching to our musiclist directory, and typing:
 
 $ npm add availity-reactstrap-validation@1.4.3
+$ npm audit fix
 
 .With that done, switch back to Sublime (or your editor of choice) and open up /src/components/account/LoginPage.jsx
 .We’ll start with the simpler of our two forms
@@ -6523,6 +6552,7 @@ import { Link } from 'react-router-dom';
 .This step’s necessary because, well, we can’t reset the password associated with an email address that doesn’t exist in our DB!
 
 $ npm add mailgun-js@0.13.1
+$ npm audit fix
 
 .And let it do its thing
 .Then it’s off to Sublime Text, where we need to make some changes to /routes/api/authentication.js
@@ -7234,6 +7264,7 @@ exports.discogs = parsed.discogs;
 .In your musiclist directory, type:
 
 $ npm add disconnect@1.2.1
+$ npm audit fix
 
 .Let it run, and you’re good to go here
 .I recommend restarting your server just to be safe
@@ -7588,7 +7619,8 @@ import AlbumsPage from './albums/AlbumsPageContainer';
 .This is because our DevTools logger has a bug that makes it very unhappy if you use an array for initialState in your reducer
 .To fix this bug, head to your terminal or command prompt, kill your server, and type:
 
-$ npm add --dev redux-devtools-dock-monitor@1.1.3 redux-devtools-log-monitor@1.4.0
+$ npm add --only=dev redux-devtools-dock-monitor@1.1.3 redux-devtools-log-monitor@1.4.0
+$ npm audit fix
 
 .Once that runs, restart your server
 .We've built a whole bunch of stuff
@@ -9619,6 +9651,7 @@ export default function Sidebar(props) {
 #Five Minute React 78 - Final Webpack Optimizations
 
 $ npm add compression-webpack-plugin@1.0.1 compression@1.7.1
+$ npm audit fix
 
 .Let that do its thing, and you’re good to go
 .Head for Sublime, open up webpack.config.js, and let’s get started
@@ -9688,6 +9721,7 @@ $ npm run build-prod
 #Five Minute React 79 - Securing Express
 
 $ npm add helmet@3.9.0
+$ npm audit fix
 
 .While that runs, switch to Sublime, open /app.js, and under line 11 add this code:
 
@@ -9732,6 +9766,7 @@ snyk test
 .In particular, it's going to recommend upgrading both Bootstrap and Express, the former of which is going to introduce minor visual issues, and the latter of which is going to potentially break your web server.
 
 $ npm add express-rate-limit@2.9.0
+$ npm audit fix
 
 .Let that run, then switch to sublime, open app.js, and below line 13 add this code:
 
@@ -9746,6 +9781,7 @@ const apiLimiter = new RateLimit({
 app.use('/api/', apiLimiter);
 
 $ npm add dompurify@1.0.2 jsdom@11.5.1
+$ npm audit fix
 
 .When it’s done, head for Sublime and open /routes/api/authentication.js
 .Below line 1, add this code:

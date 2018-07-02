@@ -1,7 +1,5 @@
-vim src/actions/progress.js
-vim src/reducers/progress.js
-vim src/components/home/HomePageContainer.jsx
-vim src/components/home/HomePage.jsx
-vim src/components/Template.jsx 
-
+vim  src/components/shared/DevTools.jsx
+vim  src/index.jsx
+vim src/store/
+vim src/store/index.js 
 
