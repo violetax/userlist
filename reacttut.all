@@ -1562,7 +1562,7 @@ export default function TestComponent() {
 
 .We’re importing React again, which we will do a lot
 .Then we’re defining a new function, which we’re exporting (so that it can be imported by index.jsx), named TestComponent
-.The “default” means we can just do:
+.The "default" means we can just do:
 
 import TestComponent from './testcomponent';
 
@@ -3057,6 +3057,8 @@ export function HomePageContainer(props) {
 .We can’t just plug these in to the incrementFunction and decrementFunction props we’re passing to our HomePage component, though, because they won’t have Redux’s dispatcher attached to them, which is the functionality that actually sends the actions to the reducer
 .So we need to use Redux to bind those action creators to functions we can send as props, which we do by creating another function below our first function, like this:
 
+.(still @ src/components/home/HomePageContainer.jsx)
+
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     incrementProgressAction: incrementProgress,
@@ -3083,7 +3085,9 @@ export function HomePageContainer(props) {
 
 .See how we’re using variable destructuring to pull those methods out of the props argument? That means we don’t have to write props.incrementProgressAction and props.decrementProgressAction when we call our HomePage component
 .We’re done here, and we’re in the home stretch
-.Save the file and open /src/components/home/HomePage.jsx
+
+$ vim src/components/home/HomePage.jsx
+
 .Delete lines 6 through 8
 .We’re not going to be using our test function anymore
 .Sorry, Draco.
@@ -3101,7 +3105,7 @@ export default function HomePage(props) {
       <Sidebar />
     </div>
   );
-
+. then add two new buttons like this:
   return (
     <div className="row">
       <div className="col-sm-12 col-md-8">
@@ -3112,9 +3116,8 @@ export default function HomePage(props) {
     </div>
   );
 
-.Save that file, and we’re on to the final step
-.Right now our template is still calling HomePage, not HomePageContainer
-.That’s no good, so open /src/components/Template.jsx and change line 5 to:
+$ vim src/components/Template.jsx
+. and change line 5 to:
 
 import HomePage from './home/HomePageContainer';
 

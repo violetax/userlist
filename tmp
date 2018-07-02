@@ -1,7 +1,7 @@
-for regex in `grep "^>" reacttut.all_bup |grep -o "/[^ |>]*" | grep ">"`
-do
-sed -i "s?${regex}?\n\$ vim ${regex}\n?" reacttut.all
-done 
+vim src/actions/progress.js
+vim src/reducers/progress.js
+vim src/components/home/HomePageContainer.jsx
+vim src/components/home/HomePage.jsx
+vim src/components/Template.jsx 
 
-sed -i "/^\$ vim$/d" reacttut.all
 
