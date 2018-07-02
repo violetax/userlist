@@ -3327,8 +3327,13 @@ if (module && module.hot) {
 
 #Five Minute React 43 - Optimizing for Production Part 1
 
-.Let’s start by opening package.json
-.In addition to writing some scripts, we’re going to do a little cleanup, since there are a few things in here now that we no longer need
+. changes to our configurations to deal with the differences between a production and development environment: by setting what’s called an environment variable, which tells our Node and React applications which environment we’re in
+. create scripts that set the environment for me right before running the application
+
+.Webpack has an “uglify” plugin built in that minifies your code
+
+$ vim package.json
+
 .Start by removing line 9:
 
     "start-w": "webpack-dev-server",
@@ -3340,15 +3345,10 @@ if (module && module.hot) {
 
 .Hey, notice that whole devDepenencies thing? That’s another thing we can use to reduce the overall size of our application
 .If, when we deploy our application to a production server, we run npm install --production , it will ignore the entire devDependencies block and not bother to install any of those modules
-.That’s a handy thing to know, and I’ll remind you of it when we get to actually deploying a production build.
 
-.By the way, removing this stuff from package.json does NOT remove it from your node_modules folder
-.There are ways to do that with Yarn or NPM, but we’re manually editing package.json right now because we’re shortly going to just nuke node_modules and start over again, which is sometimes easier than trying to keep track of what’s been installed and removed.
+$ vim webpack.config.js
 
-.OK, save package.json
-.It’s now time to dive into our Webpack config, so open webpack.config.js
-.This is not going to be as complicated as you might think … at least, not right away! Our Webpack config file will grow progressively more complex as this series continues and our app takes shape, but that kind of makes sense, right?
-
+.at the very bottom of the file, add:
 if (process.env.NODE_ENV === 'production') {
   module.exports.plugins.push(new webpack.optimize.UglifyJsPlugin());
 }
